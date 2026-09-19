@@ -1,5 +1,39 @@
+# .gitignore
+
 __pycache__/
+*.py[cod]
+*.pyo
+*.pyd
 *.pyc
+*.so
+*.egg-info/
+.eggs/
+.env
 .venv/
-data.db
-test_meraki.py
+venv/
+.env.*
+.env.local
+.python-version
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+coverage.xml
+htmlcov/
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+*.log
+
+# Build and dist artifacts
+build/
+dist/
+site/
+*.tar.gz
+
+# Local deployment secrets
+secrets/
+config/local*.json
+config/*.local

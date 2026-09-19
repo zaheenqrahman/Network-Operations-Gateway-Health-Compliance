@@ -1,14 +1,18 @@
 # NetOps Gateway
 
-### Automated network health and compliance monitoring for hybrid enterprise networks — built on Cisco Meraki, FastAPI, Azure, and C++.
+### Automated network health & compliance monitoring for hybrid enterprise networks — built on Cisco Meraki, FastAPI, Azure, and C++.
 
-NetOps Gateway is a network operations platform that brings cloud telemetry, on-premises discovery, compliance checks, and operational visibility together in one workflow. It is designed to help network teams understand what is happening across distributed environments before an outage or configuration drift becomes a larger problem.
+[![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.110%2B-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+
+NetOps Gateway is a network operations platform that brings cloud telemetry, on-premises discovery, compliance checks, and operational visibility together in one workflow. It is designed to help network teams understand what is happening across distributed environments before outages, configuration drift, or compliance gaps become larger problems.
 
 ## Project Overview
 
-NetOps Gateway collects live device data from Cisco Meraki, evaluates network health and compliance, and exposes the results through a secured REST API. A lightweight C++ scanner extends visibility into the on-premises environment, while Azure provides a path for hosted deployment.
+NetOps Gateway collects live device data from Cisco Meraki, evaluates network health and compliance, and exposes the results through a secure REST API. A lightweight C++ scanner extends visibility into the on-premises environment, while Azure provides the foundation for managed deployment in enterprise environments.
 
-The project is inspired by the visual, topology-first experience of tools such as Cisco Packet Tracer: it connects the major pieces of a hybrid network into one easy-to-understand operational picture.
+The project is inspired by the topology-first experience of networking tools such as Cisco Packet Tracer: it connects the major components of a hybrid network into one easy-to-understand operational picture.
 
 ## Architecture Overview
 
@@ -45,6 +49,14 @@ The project is inspired by the visual, topology-first experience of tools such a
 - RESTful service architecture
 - Cisco Packet Tracer for network modeling and simulation
 
+## Repository Layout
+
+- `docs/architecture.svg` — project architecture overview
+- `README.md` — project overview and usage guidance
+- Backend services — API and compliance logic
+- C++ scanner — host-side discovery and checks
+- Lab / simulation assets — Cisco Packet Tracer or model-based network workflows
+
 ## Getting Started
 
 1. Configure Cisco Meraki API credentials and Azure environment settings.
@@ -52,16 +64,17 @@ The project is inspired by the visual, topology-first experience of tools such a
 3. Run the C++ scan tool on the on-premises network side.
 4. Query the API for device health, compliance status, and network insights.
 
-## Repository Layout
+## Contributing
 
-- `docs/architecture.svg` — project architecture overview
-- FastAPI backend — API and compliance workflows
-- C++ scanner — host-side discovery and checks
-- Cisco Packet Tracer assets — network lab and simulation workflows
+Contributions are welcome. Please review the contributing guide for standards and expected workflow.
 
 ## License
 
-This project is intended for internal network automation and operations workflows. Update the license terms to match your organization's policy before production use.
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
+
+## Security
+
+Please review [SECURITY.md](SECURITY.md) for supported versions and reporting procedures for vulnerabilities.
 
 ---
 
