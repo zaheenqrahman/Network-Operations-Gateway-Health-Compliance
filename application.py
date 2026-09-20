@@ -3,7 +3,7 @@ import meraki
 
 app = Flask(__name__)
 
-API_KEY = "977b24744ba4fbe1bff8c6bd048b632bd692d967"
+API_KEY = "c13b59c1e0eedcee931b7b9cb42c0fa6d1c5a4a5"
 ORG_ID = "1795064"
 
 dashboard = meraki.DashboardAPI(API_KEY, suppress_logging=True)
@@ -74,6 +74,47 @@ def get_network_health(network_id):
     result = check_network_health(network)
     return {"network_id": network_id, "name": network["name"], **result}
 
+def check_device_compliance(device):
+    " ff device against single compliance rule set, like if its on the approved list/offline,etc"
+    issues = []
+    # 1: Flags if user/device is offline
+    if device.get("status") == "offline":
+        issues.append("Device is offline")
+
+    # 2: flag if statement if device is not an approved model
+    approved_models = ["MR20", "MX100", "MS250-24"]
+    if device.get("model") not in approved_models:
+        issues.append(f"Model {device.get('model')} is not on the approved list")
+
+    # returns basically an else statement of the compliance and issues found
+    return{
+        "compliant" : len(issues) == 0,
+        "issues": issues
+    }
+
+@app.route('/devices/<serial>/compliance')
+def get_device_compliance(serial):
+    devices = fetch_devices()
+    device = next((d for d in devices if d ["serial"] == serial), None)
+
+    if device is None:
+        return {"error": f"Device '{serial}' not found"}, 404
+
+    result = check_device_compliance(device)
+    return {"serial": serial, "name": device["name"], **result}
+# should print it out the ohome address weblink but adjust it with the compliance and devices url added
+
+@app.route('/alerts/scan', methods = ['POST'])
+def scan_alerts():
+    networks = fetch_networks()
+    alerts = []
+
+    for network in networks:
+        result = check_network_health(network)
+        if result["healthy"] == False:
+            alerts.append(result["issue"])
+
+    return{"alerts_found": len(alerts), "alerts": alerts}
 
 if __name__ == '__main__':
     app.run(debug=True)

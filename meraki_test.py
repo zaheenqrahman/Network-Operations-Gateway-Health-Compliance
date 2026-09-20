@@ -1,6 +1,6 @@
 import meraki
 
-API_KEY = "977b24744ba4fbe1bff8c6bd048b632bd692d967"
+API_KEY = "c13b59c1e0eedcee931b7b9cb42c0fa6d1c5a4a5"
 dashboard = meraki.DashboardAPI(API_KEY, suppress_logging=True)
 
 orgs = dashboard.organizations.getOrganizations()
