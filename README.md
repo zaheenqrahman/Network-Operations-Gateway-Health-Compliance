@@ -1,6 +1,6 @@
 # NetOps Gateway
 
-### Automated network health & compliance monitoring for hybrid enterprise networks — built on Cisco Meraki, FastAPI, Azure, and C++.
+### Automated network health & compliance monitoring for hybrid enterprise networks — built on Cisco Meraki, FastAPI/Flask, Azure, Bash and Python.
 
 [![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.110%2B-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
