@@ -54,14 +54,14 @@ The project is inspired by the topology-first experience of networking tools suc
 - `docs/architecture.svg` — project architecture overview
 - `README.md` — project overview and usage guidance
 - Backend services — API and compliance logic
-- C++ scanner — host-side discovery and checks
+- Azure Cloud Platform - Free Tier resources
 - Lab / simulation assets — Cisco Packet Tracer or model-based network workflows
 
 ## Getting Started
 
 1. Configure Cisco Meraki API credentials and Azure environment settings.
 2. Deploy the FastAPI/Flask backend in Azure or a local development environment.
-3. Run the C++ scan tool on the on-premises network side.
+3. Launch Azure App Services, serverless architecture with many configuration and optimization settings 
 4. Query the API for device health, compliance status, and network insights.
 
 
