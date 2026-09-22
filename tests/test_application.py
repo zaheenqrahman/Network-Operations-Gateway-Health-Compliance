@@ -13,37 +13,51 @@ def client():
 # --- check_network_health ---
 
 def test_network_health_online():
-    result = check_network_health({"name": "Main Office", "status": "online"})
+    network = {"id": "N_1001", "name": "Main Office"}
+    device_statuses = [{"serial": "Q2XX-XXXX-0001", "networkId": "N_1001", "status": "online"}]
+    result = check_network_health(network, device_statuses)
     assert result == {"healthy": True, "issue": None}
 
 
 def test_network_health_offline():
-    result = check_network_health({"name": "Branch Office - East", "status": "offline"})
+    network = {"id": "N_1002", "name": "Branch Office - East"}
+    device_statuses = [
+        {"serial": "Q2XX-XXXX-0003", "name": "Branch-Switch", "networkId": "N_1002", "status": "offline"}
+    ]
+    result = check_network_health(network, device_statuses)
     assert result["healthy"] is False
-    assert result["issue"] == "Network 'Branch Office - East' is offline"
+    assert result["issue"] == "Network 'Branch Office - East' has device(s) down: Branch-Switch"
 
 
 # --- check_device_compliance ---
 
 def test_device_compliance_online_approved_model():
-    result = check_device_compliance({"status": "online", "model": "MR20"})
+    device = {"serial": "Q2XX-XXXX-0001", "model": "MR20"}
+    device_statuses = [{"serial": "Q2XX-XXXX-0001", "status": "online"}]
+    result = check_device_compliance(device, device_statuses)
     assert result == {"compliant": True, "issues": []}
 
 
 def test_device_compliance_offline_device():
-    result = check_device_compliance({"status": "offline", "model": "MR20"})
+    device = {"serial": "Q2XX-XXXX-0001", "model": "MR20"}
+    device_statuses = [{"serial": "Q2XX-XXXX-0001", "status": "offline"}]
+    result = check_device_compliance(device, device_statuses)
     assert result["compliant"] is False
     assert "Device is offline" in result["issues"]
 
 
 def test_device_compliance_unapproved_model():
-    result = check_device_compliance({"status": "online", "model": "UnknownModel"})
+    device = {"serial": "Q2XX-XXXX-0001", "model": "UnknownModel"}
+    device_statuses = [{"serial": "Q2XX-XXXX-0001", "status": "online"}]
+    result = check_device_compliance(device, device_statuses)
     assert result["compliant"] is False
     assert "Model UnknownModel is not on the approved list" in result["issues"]
 
 
 def test_device_compliance_offline_and_unapproved_model():
-    result = check_device_compliance({"status": "offline", "model": "UnknownModel"})
+    device = {"serial": "Q2XX-XXXX-0001", "model": "UnknownModel"}
+    device_statuses = [{"serial": "Q2XX-XXXX-0001", "status": "offline"}]
+    result = check_device_compliance(device, device_statuses)
     assert result["compliant"] is False
     assert len(result["issues"]) == 2
 
