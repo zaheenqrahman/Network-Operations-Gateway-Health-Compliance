@@ -76,6 +76,7 @@ def test_get_networks(client):
     data = response.get_json()
     assert "networks" in data
     assert len(data["networks"]) > 0
+    assert data["source"] in ("live", "mock")
 
 
 def test_get_devices(client):
@@ -84,6 +85,7 @@ def test_get_devices(client):
     data = response.get_json()
     assert "devices" in data
     assert len(data["devices"]) > 0
+    assert data["source"] in ("live", "mock")
 
 
 def test_network_health_route_found(client):
@@ -95,6 +97,7 @@ def test_network_health_route_found(client):
     data = response.get_json()
     assert data["network_id"] == network_id
     assert "healthy" in data
+    assert data["source"] in ("live", "mock")
 
 
 def test_network_health_route_not_found(client):
@@ -112,6 +115,7 @@ def test_device_compliance_route_found(client):
     data = response.get_json()
     assert data["serial"] == serial
     assert "compliant" in data
+    assert data["source"] in ("live", "mock")
 
 
 def test_device_compliance_route_not_found(client):
@@ -126,3 +130,4 @@ def test_alerts_scan(client):
     data = response.get_json()
     assert "alerts_found" in data
     assert data["alerts_found"] == len(data["alerts"])
+    assert data["source"] in ("live", "mock")
