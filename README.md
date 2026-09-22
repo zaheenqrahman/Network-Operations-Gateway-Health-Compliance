@@ -1,6 +1,6 @@
 # NetOps Gateway
 
-### Automated network health & compliance monitoring for hybrid enterprise networks — built on Cisco Meraki, FastAPI, Azure, and C++.
+### Automated network health & compliance monitoring for hybrid enterprise networks — built on Cisco Meraki, FastAPI/Flask, Azure, Bash and Python.
 
 [![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.110%2B-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
@@ -10,14 +10,14 @@ NetOps Gateway is a network operations platform that brings cloud telemetry, on-
 
 ## Project Overview
 
-NetOps Gateway collects live device data from Cisco Meraki, evaluates network health and compliance, and exposes the results through a secure REST API. A lightweight C++ scanner extends visibility into the on-premises environment, while Azure provides the foundation for managed deployment in enterprise environments.
+NetOps Gateway collects live device data from Cisco Meraki, evaluates network health and compliance, and exposes the results through a secure REST API. 
 
 The project is inspired by the topology-first experience of networking tools such as Cisco Packet Tracer: it connects the major components of a hybrid network into one easy-to-understand operational picture.
 
 ## Architecture Overview
 
 <p align="center">
-  <img src="docs/architecture.svg" alt="NetOps Gateway architecture overview showing Meraki Cloud, the FastAPI gateway, operations console, on-premises network, C++ scanner, and Cisco Packet Tracer lab" width="980">
+  <img src="docs/architecture.svg" alt="NetOps Gateway architecture overview showing Meraki Cloud, the FastAPI gateway, operations console, on-premises network, Bash and Python scripting and Cisco Packet Tracer lab" width="980">
 </p>
 
 <p align="center"><em>Cloud telemetry, compliance logic, on-premises scanning, and network-lab workflows connected through NetOps Gateway.</em></p>
@@ -28,12 +28,12 @@ The project is inspired by the topology-first experience of networking tools suc
 - Evaluates health, compliance, drift, and configuration state
 - Provides secure FastAPI REST endpoints for operational visibility
 - Supports Azure-ready deployment for hosted operations
-- Uses a lightweight C++ scanner for on-premises discovery and checks
+- Has own CLI like Ansible and Terraform and other similar network automation platforms
 - Connects network-lab and simulation workflows with real operational concepts
 
 ## Use Cases
 
-- Track network health across branch, campus, and hybrid environments
+- Track network health across branch, campus, retail, and hybrid environments
 - Validate device and configuration compliance against internal standards
 - Detect outage risk, configuration drift, and mismatched operational state
 - Give network operations teams a centralized view of distributed infrastructure
@@ -42,10 +42,10 @@ The project is inspired by the topology-first experience of networking tools suc
 ## Technology Stack
 
 - Python
-- FastAPI
+- FastAPI/Flask
 - Cisco Meraki API
 - Azure
-- C++
+- Bash
 - RESTful service architecture
 - Cisco Packet Tracer for network modeling and simulation
 
@@ -54,19 +54,16 @@ The project is inspired by the topology-first experience of networking tools suc
 - `docs/architecture.svg` — project architecture overview
 - `README.md` — project overview and usage guidance
 - Backend services — API and compliance logic
-- C++ scanner — host-side discovery and checks
+- Azure Cloud Platform - Free Tier resources
 - Lab / simulation assets — Cisco Packet Tracer or model-based network workflows
 
 ## Getting Started
 
 1. Configure Cisco Meraki API credentials and Azure environment settings.
-2. Deploy the FastAPI backend in Azure or a local development environment.
-3. Run the C++ scan tool on the on-premises network side.
+2. Deploy the FastAPI/Flask backend in Azure or a local development environment.
+3. Launch Azure App Services, serverless architecture with many configuration and optimization settings 
 4. Query the API for device health, compliance status, and network insights.
 
-## Contributing
-
-Contributions are welcome. Please review the contributing guide for standards and expected workflow.
 
 ## License
 
@@ -76,6 +73,4 @@ This project is licensed under the MIT License. See [LICENSE](LICENSE) for detai
 
 Please review [SECURITY.md](SECURITY.md) for supported versions and reporting procedures for vulnerabilities.
 
----
-
-Built for modern enterprise network operations.
+Built to mirror modern enterprise network operations.
