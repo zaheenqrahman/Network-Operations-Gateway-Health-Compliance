@@ -67,6 +67,29 @@ def get_networks():
     return {"networks": fetch_networks()}
 
 
+@app.route('/debug/meraki')
+def debug_meraki():
+    """TEMPORARY diagnostic endpoint — remove once the Meraki data issue is resolved."""
+    if dashboard is None:
+        return {"ok": False, "stage": "client_init", "error": "Meraki client not initialized"}
+    try:
+        real_data = dashboard.organizations.getOrganizationNetworks(ORG_ID)
+        return {
+            "ok": True,
+            "org_id_used": ORG_ID,
+            "network_count": len(real_data) if real_data else 0,
+            "sample": real_data[:2] if real_data else [],
+        }
+    except Exception as e:
+        return {
+            "ok": False,
+            "stage": "api_call",
+            "org_id_used": ORG_ID,
+            "error_type": type(e).__name__,
+            "error": str(e),
+        }
+
+
 @app.route('/devices')
 def get_devices():
     return {"devices": fetch_devices()}
