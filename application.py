@@ -1,10 +1,11 @@
+import os
 from flask import Flask
 import meraki
 
 app = Flask(__name__)
 
-API_KEY = "c13b59c1e0eedcee931b7b9cb42c0fa6d1c5a4a5"
-ORG_ID = "1795064"
+API_KEY = os.environ.get("MERAKI_API_KEY", "")
+ORG_ID = os.environ.get("ORG_ID", "")
 
 dashboard = meraki.DashboardAPI(API_KEY, suppress_logging=True)
 
