@@ -7,12 +7,18 @@ app = Flask(__name__)
 API_KEY = os.environ.get("MERAKI_API_KEY", "")
 ORG_ID = os.environ.get("ORG_ID", "")
 
-dashboard = meraki.DashboardAPI(API_KEY, suppress_logging=True)
+try:
+    dashboard = meraki.DashboardAPI(API_KEY, suppress_logging=True)
+except Exception as e:
+    print(f"Meraki client init failed, will use mock data: {e}")
+    dashboard = None
 
 
 def fetch_networks():
     """Real Meraki data — falls back to mock data if the API call fails or is empty."""
     try:
+        if dashboard is None:
+            raise RuntimeError("Meraki client not initialized")
         real_data = dashboard.organizations.getOrganizationNetworks(ORG_ID)
         if real_data:
             return real_data
@@ -29,6 +35,8 @@ def fetch_networks():
 def fetch_devices():
     """Real Meraki device data — falls back to mock data if the API call fails or is empty."""
     try:
+        if dashboard is None:
+            raise RuntimeError("Meraki client not initialized")
         real_data = dashboard.organizations.getOrganizationDevices(ORG_ID)
         if real_data:
             return real_data
