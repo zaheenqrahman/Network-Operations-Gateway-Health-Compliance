@@ -1,6 +1,8 @@
+import os
+
 import meraki
 
-API_KEY = "c13b59c1e0eedcee931b7b9cb42c0fa6d1c5a4a5"
+API_KEY = os.environ.get("MERAKI_API_KEY", "")
 dashboard = meraki.DashboardAPI(API_KEY, suppress_logging=True)
 
 orgs = dashboard.organizations.getOrganizations()
