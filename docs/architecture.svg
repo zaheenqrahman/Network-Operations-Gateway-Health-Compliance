@@ -1,19 +1,33 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="980" height="430" viewBox="0 0 980 430" role="img" aria-labelledby="title desc">
-  <title id="title">NetOps Gateway network architecture</title>
-  <desc id="desc">Meraki Cloud feeds the NetOps Gateway, which connects to an operations console, an on-prem network, a C++ scanner, and Cisco Packet Tracer.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="260" viewBox="0 0 980 260" role="img" aria-labelledby="title desc">
+  <title id="title">NetOps Gateway architecture</title>
+  <desc id="desc">Meraki Cloud feeds live telemetry into the NetOps Gateway Flask API, which is queried by an operations console or client.</desc>
   <defs>
     <linearGradient id="bg" x1="0" x2="1"><stop offset="0" stop-color="#071425"/><stop offset="1" stop-color="#0d1f33"/></linearGradient>
     <linearGradient id="blue" x1="0" x2="1"><stop offset="0" stop-color="#5cc8ff"/><stop offset="1" stop-color="#2e7df6"/></linearGradient>
-    <linearGradient id="green" x1="0" x2="1"><stop offset="0" stop-color="#7ef0c3"/><stop offset="1" stop-color="#30b38a"/></linearGradient>
     <linearGradient id="gold" x1="0" x2="1"><stop offset="0" stop-color="#ffe08a"/><stop offset="1" stop-color="#ffb347"/></linearGradient>
     <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#000" flood-opacity=".25"/></filter>
   </defs>
-  <rect width="980" height="430" rx="18" fill="url(#bg)"/>
+  <rect width="980" height="260" rx="18" fill="url(#bg)"/>
   <g font-family="Segoe UI,Arial,sans-serif">
-    <g fill="#12283f" stroke="#4fb8ff" stroke-width="2" filter="url(#shadow)"><rect x="40" y="65" width="260" height="110" rx="16"/><rect x="358" y="90" width="260" height="160" rx="18" fill="#152d4d" stroke="#72d5ff"/><rect x="680" y="90" width="240" height="110" rx="16" fill="#1e2d3f" stroke="#ffcc6a"/><rect x="118" y="286" width="220" height="92" rx="16" fill="#0a1d2e"/><rect x="412" y="286" width="220" height="92" rx="16" fill="#0d2236" stroke="#f6b86a"/></g>
-    <g fill="#eaf6ff" text-anchor="middle"><text x="170" y="106" font-size="22" font-weight="700">Meraki Cloud</text><text x="170" y="136" font-size="15" fill="#9ecae9">Live network telemetry</text><text x="488" y="126" font-size="22" font-weight="700">NetOps Gateway</text><text x="488" y="154" font-size="15" fill="#9ecae9">FastAPI + Compliance Engine</text><text x="800" y="122" font-size="22" font-weight="700" fill="#fff4d6">Operations Console</text><text x="800" y="150" font-size="15" fill="#f8d995">Health / drift / compliance</text><text x="228" y="320" font-size="20" font-weight="700">On-prem Network</text><text x="228" y="346" font-size="14" fill="#96d6ff">Switches • Routers • Devices</text><text x="522" y="320" font-size="20" font-weight="700" fill="#fff0cf">C++ Scanner</text><text x="522" y="346" font-size="14" fill="#f5d08c">Host-side discovery &amp; checks</text></g>
-    <rect x="88" y="155" width="164" height="12" rx="6" fill="url(#green)"/><rect x="404" y="176" width="168" height="12" rx="6" fill="url(#blue)"/><rect x="404" y="198" width="142" height="12" rx="6" fill="#89d4ff" opacity=".7"/><rect x="726" y="165" width="148" height="12" rx="6" fill="url(#gold)"/>
-    <g stroke="#7edcff" stroke-width="4" stroke-linecap="round" fill="none"><path d="M300 138h58"/><path d="M618 138h62"/><path d="M488 250v70"/><path d="M632 332h48"/></g><path d="M338 332h74" stroke="#f6b86a" stroke-width="4" stroke-linecap="round"/>
-    <g transform="translate(710 270)"><rect width="220" height="54" rx="12" fill="#0e1f36" stroke="#6fe1ff" stroke-width="2"/><text x="110" y="23" text-anchor="middle" font-size="16" font-weight="700" fill="#e8f7ff">Cisco Packet Tracer</text><text x="110" y="40" text-anchor="middle" font-size="11" fill="#9ae2ff">network lab / simulation</text></g>
+    <g fill="#12283f" stroke="#4fb8ff" stroke-width="2" filter="url(#shadow)">
+      <rect x="40" y="75" width="260" height="110" rx="16"/>
+      <rect x="358" y="60" width="260" height="140" rx="18" fill="#152d4d" stroke="#72d5ff"/>
+      <rect x="680" y="75" width="260" height="110" rx="16" fill="#1e2d3f" stroke="#ffcc6a"/>
+    </g>
+    <g fill="#eaf6ff" text-anchor="middle">
+      <text x="170" y="116" font-size="22" font-weight="700">Meraki Cloud</text>
+      <text x="170" y="146" font-size="15" fill="#9ecae9">Live network &amp; device telemetry</text>
+      <text x="488" y="106" font-size="22" font-weight="700">NetOps Gateway</text>
+      <text x="488" y="134" font-size="15" fill="#9ecae9">Flask API + compliance engine</text>
+      <text x="488" y="158" font-size="13" fill="#7fb8e0">deployed on Azure App Service</text>
+      <text x="810" y="112" font-size="22" font-weight="700" fill="#fff4d6">Client / Console</text>
+      <text x="810" y="140" font-size="15" fill="#f8d995">Queries health, compliance, alerts</text>
+    </g>
+    <rect x="88" y="165" width="164" height="12" rx="6" fill="url(#blue)"/>
+    <rect x="726" y="150" width="148" height="12" rx="6" fill="url(#gold)"/>
+    <g stroke="#7edcff" stroke-width="4" stroke-linecap="round" fill="none">
+      <path d="M300 130h58"/>
+      <path d="M618 130h62"/>
+    </g>
   </g>
 </svg>
