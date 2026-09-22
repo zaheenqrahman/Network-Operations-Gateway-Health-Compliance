@@ -22,7 +22,7 @@ NetOps Gateway is a REST API that pulls live network and device data from the Ci
 - Evaluates network health based on live device status (online/offline/alerting)
 - Checks individual devices against a compliance rule set (status + approved model list)
 - Scans all networks for active alerts in one call
-- Falls back to mock data automatically if the Meraki API is unreachable, so the API stays usable in demos/dev without live credentials
+- Falls back to mock data automatically if the Meraki API is unreachable, so the API stays usable in demos/dev without live credentials — every response includes a `"source": "live" | "mock"` field so it's never ambiguous which one you're looking at
 
 ## API Endpoints
 
