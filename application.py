@@ -50,10 +50,32 @@ def fetch_devices():
     ]
 
 
-def check_network_health(network):
-    """Simple compliance logic: flag any network that's offline."""
-    if network.get("status") == "offline":
-        return {"healthy": False, "issue": f"Network '{network['name']}' is offline"}
+def fetch_device_statuses():
+    """Live per-device status (online/offline/alerting/dormant) — separate from
+    fetch_devices()'s static info, since getOrganizationDevices doesn't include it."""
+    try:
+        if dashboard is None:
+            raise RuntimeError("Meraki client not initialized")
+        real_data = dashboard.organizations.getOrganizationDevicesStatuses(ORG_ID)
+        if real_data:
+            return real_data
+    except Exception as e:
+        print(f"Meraki call failed, using mock statuses: {e}")
+
+    return [
+        {"serial": "Q2XX-XXXX-0001", "networkId": "N_1001", "status": "online"},
+        {"serial": "Q2XX-XXXX-0002", "networkId": "N_1001", "status": "online"},
+        {"serial": "Q2XX-XXXX-0003", "networkId": "N_1002", "status": "offline"},
+    ]
+
+
+def check_network_health(network, device_statuses):
+    """A network is unhealthy if any of its devices are offline or alerting."""
+    bad = {"offline", "alerting"}
+    down = [d for d in device_statuses if d.get("networkId") == network["id"] and d.get("status") in bad]
+    if down:
+        names = ", ".join(d.get("name") or d.get("serial", "unknown device") for d in down)
+        return {"healthy": False, "issue": f"Network '{network['name']}' has device(s) down: {names}"}
     return {"healthy": True, "issue": None}
 
 
@@ -65,29 +87,6 @@ def index():
 @app.route('/networks')
 def get_networks():
     return {"networks": fetch_networks()}
-
-
-@app.route('/debug/meraki')
-def debug_meraki():
-    """TEMPORARY diagnostic endpoint — remove once the Meraki data issue is resolved."""
-    if dashboard is None:
-        return {"ok": False, "stage": "client_init", "error": "Meraki client not initialized"}
-    try:
-        real_data = dashboard.organizations.getOrganizationNetworks(ORG_ID)
-        return {
-            "ok": True,
-            "org_id_used": ORG_ID,
-            "network_count": len(real_data) if real_data else 0,
-            "sample": real_data[:2] if real_data else [],
-        }
-    except Exception as e:
-        return {
-            "ok": False,
-            "stage": "api_call",
-            "org_id_used": ORG_ID,
-            "error_type": type(e).__name__,
-            "error": str(e),
-        }
 
 
 @app.route('/devices')
@@ -103,14 +102,16 @@ def get_network_health(network_id):
     if network is None:
         return {"error": f"Network '{network_id}' not found"}, 404
 
-    result = check_network_health(network)
+    device_statuses = fetch_device_statuses()
+    result = check_network_health(network, device_statuses)
     return {"network_id": network_id, "name": network["name"], **result}
 
-def check_device_compliance(device):
+def check_device_compliance(device, device_statuses):
     " ff device against single compliance rule set, like if its on the approved list/offline,etc"
     issues = []
-    # 1: Flags if user/device is offline
-    if device.get("status") == "offline":
+    # 1: Flags if device is offline (live status, looked up by serial)
+    status = next((s.get("status") for s in device_statuses if s.get("serial") == device.get("serial")), None)
+    if status == "offline":
         issues.append("Device is offline")
 
     # 2: flag if statement if device is not an approved model
@@ -132,17 +133,19 @@ def get_device_compliance(serial):
     if device is None:
         return {"error": f"Device '{serial}' not found"}, 404
 
-    result = check_device_compliance(device)
+    device_statuses = fetch_device_statuses()
+    result = check_device_compliance(device, device_statuses)
     return {"serial": serial, "name": device["name"], **result}
 # should print it out the ohome address weblink but adjust it with the compliance and devices url added
 
 @app.route('/alerts/scan', methods = ['POST'])
 def scan_alerts():
     networks = fetch_networks()
+    device_statuses = fetch_device_statuses()
     alerts = []
 
     for network in networks:
-        result = check_network_health(network)
+        result = check_network_health(network, device_statuses)
         if result["healthy"] == False:
             alerts.append(result["issue"])
 
