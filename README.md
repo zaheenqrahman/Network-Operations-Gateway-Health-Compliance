@@ -28,12 +28,12 @@ The project is inspired by the topology-first experience of networking tools suc
 - Evaluates health, compliance, drift, and configuration state
 - Provides secure FastAPI REST endpoints for operational visibility
 - Supports Azure-ready deployment for hosted operations
-- Uses a lightweight C++ scanner for on-premises discovery and checks
+- Has own CLI like Ansible and Terraform and other similar network automation platforms
 - Connects network-lab and simulation workflows with real operational concepts
 
 ## Use Cases
 
-- Track network health across branch, campus, and hybrid environments
+- Track network health across branch, campus, retail, and hybrid environments
 - Validate device and configuration compliance against internal standards
 - Detect outage risk, configuration drift, and mismatched operational state
 - Give network operations teams a centralized view of distributed infrastructure
@@ -42,10 +42,10 @@ The project is inspired by the topology-first experience of networking tools suc
 ## Technology Stack
 
 - Python
-- FastAPI
+- FastAPI/Flask
 - Cisco Meraki API
 - Azure
-- C++
+- Bash
 - RESTful service architecture
 - Cisco Packet Tracer for network modeling and simulation
 
@@ -60,13 +60,10 @@ The project is inspired by the topology-first experience of networking tools suc
 ## Getting Started
 
 1. Configure Cisco Meraki API credentials and Azure environment settings.
-2. Deploy the FastAPI backend in Azure or a local development environment.
+2. Deploy the FastAPI/Flask backend in Azure or a local development environment.
 3. Run the C++ scan tool on the on-premises network side.
 4. Query the API for device health, compliance status, and network insights.
 
-## Contributing
-
-Contributions are welcome. Please review the contributing guide for standards and expected workflow.
 
 ## License
 
@@ -76,6 +73,4 @@ This project is licensed under the MIT License. See [LICENSE](LICENSE) for detai
 
 Please review [SECURITY.md](SECURITY.md) for supported versions and reporting procedures for vulnerabilities.
 
----
-
-Built for modern enterprise network operations.
+Built to mirror modern enterprise network operations.
