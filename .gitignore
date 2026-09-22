@@ -23,6 +23,8 @@ htmlcov/
 Thumbs.db
 .idea/
 .vscode/
+instance/
+report.json
 *.swp
 *.swo
 *.log

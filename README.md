@@ -1,69 +1,64 @@
 # NetOps Gateway
 
-### Automated network health & compliance monitoring for hybrid enterprise networks — built on Cisco Meraki, FastAPI/Flask, Azure, Bash and Python.
+### Automated network health & compliance monitoring for enterprise networks — built on Cisco Meraki, Flask, and Azure.
 
-[![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.110%2B-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![Python](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![Flask](https://img.shields.io/badge/Flask-3.0%2B-000000?logo=flask&logoColor=white)](https://flask.palletsprojects.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-NetOps Gateway is a network operations platform that brings cloud telemetry, on-premises discovery, compliance checks, and operational visibility together in one workflow. It is designed to help network teams understand what is happening across distributed environments before outages, configuration drift, or compliance gaps become larger problems.
-
-## Project Overview
-
-NetOps Gateway collects live device data from Cisco Meraki, evaluates network health and compliance, and exposes the results through a secure REST API. 
-
-The project is inspired by the topology-first experience of networking tools such as Cisco Packet Tracer: it connects the major components of a hybrid network into one easy-to-understand operational picture.
+NetOps Gateway is a REST API that pulls live network and device data from the Cisco Meraki cloud, evaluates health and compliance against a simple rule set, and exposes the results as JSON. It's built to help a network operations team see device status, compliance gaps, and active alerts across an organization without digging through the Meraki dashboard by hand.
 
 ## Architecture Overview
 
 <p align="center">
-  <img src="docs/architecture.svg" alt="NetOps Gateway architecture overview showing Meraki Cloud, the FastAPI gateway, operations console, on-premises network, Bash and Python scripting and Cisco Packet Tracer lab" width="980">
+  <img src="docs/architecture.svg" alt="NetOps Gateway architecture overview showing Meraki Cloud feeding the Flask API gateway, which is queried by an operations console or client" width="980">
 </p>
 
-<p align="center"><em>Cloud telemetry, compliance logic, on-premises scanning, and network-lab workflows connected through NetOps Gateway.</em></p>
+<p align="center"><em>Meraki Cloud telemetry flows into NetOps Gateway, which evaluates health/compliance and serves the results over REST.</em></p>
 
 ## What It Does
 
-- Collects live device and network data from Cisco Meraki
-- Evaluates health, compliance, drift, and configuration state
-- Provides secure FastAPI REST endpoints for operational visibility
-- Supports Azure-ready deployment for hosted operations
-- Has own CLI like Ansible and Terraform and other similar network automation platforms
-- Connects network-lab and simulation workflows with real operational concepts
+- Pulls live network and device data from the Cisco Meraki Dashboard API
+- Evaluates network health based on live device status (online/offline/alerting)
+- Checks individual devices against a compliance rule set (status + approved model list)
+- Scans all networks for active alerts in one call
+- Falls back to mock data automatically if the Meraki API is unreachable, so the API stays usable in demos/dev without live credentials
 
-## Use Cases
+## API Endpoints
 
-- Track network health across branch, campus, retail, and hybrid environments
-- Validate device and configuration compliance against internal standards
-- Detect outage risk, configuration drift, and mismatched operational state
-- Give network operations teams a centralized view of distributed infrastructure
-- Prototype and visualize network behavior with Cisco Packet Tracer
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/networks` | List all networks in the organization |
+| GET | `/networks/<network_id>/health` | Health status of a specific network |
+| GET | `/devices` | List all devices in the organization |
+| GET | `/devices/<serial>/compliance` | Compliance check for a specific device |
+| POST | `/alerts/scan` | Scan all networks and return active alerts |
 
 ## Technology Stack
 
-- Python
-- FastAPI/Flask
-- Cisco Meraki API
-- Azure
-- Bash
-- RESTful service architecture
-- Cisco Packet Tracer for network modeling and simulation
-
-## Repository Layout
-
-- `docs/architecture.svg` — project architecture overview
-- `README.md` — project overview and usage guidance
-- Backend services — API and compliance logic
-- Azure Cloud Platform - Free Tier resources
-- Lab / simulation assets — Cisco Packet Tracer or model-based network workflows
+- **Python / Flask** — REST API
+- **Cisco Meraki Dashboard API** — live network/device telemetry
+- **Azure App Service** — hosting, deployed via GitHub Actions CI/CD
+- **pytest** — test suite for compliance and health logic
 
 ## Getting Started
 
-1. Configure Cisco Meraki API credentials and Azure environment settings.
-2. Deploy the FastAPI/Flask backend in Azure or a local development environment.
-3. Launch Azure App Services, serverless architecture with many configuration and optimization settings 
-4. Query the API for device health, compliance status, and network insights.
+1. Clone the repo and install dependencies: `pip install -r requirements.txt`
+2. Set the `MERAKI_API_KEY` and `ORG_ID` environment variables (never hardcoded or committed — see [SECURITY.md](SECURITY.md))
+3. Run locally with `python application.py`, or deploy to Azure App Service — the included GitHub Actions workflow (`.github/workflows/`) auto-deploys on push to `main` using `gunicorn --bind=0.0.0.0 --timeout 600 application:app` as the startup command
+4. Query the API for network health, device compliance, and alerts
 
+## Repository Layout
+
+- `application.py` — Flask app, API routes, and compliance/health logic
+- `tests/` — pytest test suite
+- `docs/architecture.svg` — architecture diagram
+- `.github/workflows/` — CI/CD pipeline (Azure deploy)
+
+## Roadmap
+
+- Real device compliance data — currently proven against a Cisco DevNet Meraki sandbox (populated with real devices); the production org has networks but no owned/claimed hardware yet, so `/devices` returns mock data there until a real or Systems-Manager-enrolled device is added
+- Cisco Packet Tracer network topology lab — not yet built
 
 ## License
 
@@ -72,5 +67,3 @@ This project is licensed under the MIT License. See [LICENSE](LICENSE) for detai
 ## Security
 
 Please review [SECURITY.md](SECURITY.md) for supported versions and reporting procedures for vulnerabilities.
-
-Built to mirror modern enterprise network operations.
