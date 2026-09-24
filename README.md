@@ -54,6 +54,7 @@ NetOps Gateway is a REST API that pulls live network and device data from the Ci
 - `tests/` — pytest test suite
 - `docs/architecture.svg` — architecture diagram
 - `.github/workflows/` — CI/CD pipeline (Azure deploy)
+- `.Cisco Packet Tracer/` - Physical network topology layout with physical devices (servers, switches, computers) over cloud resources and physical infrastructure 
 
 ## Roadmap
 
