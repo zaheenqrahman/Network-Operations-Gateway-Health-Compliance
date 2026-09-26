@@ -34,6 +34,8 @@ NetOps Gateway is a REST API that pulls live network and device data from the Ci
 | GET | `/devices/<serial>/compliance` | Compliance check for a specific device |
 | POST | `/alerts/scan` | Scan all networks and return active alerts |
 
+All endpoints except `/` require an `X-API-Token` header matching the `GATEWAY_TOKEN` app setting. Requests without it get `401`; if `GATEWAY_TOKEN` is not configured the server returns `503` rather than serving unauthenticated.
+
 ## Technology Stack
 
 - **Python / Flask** — REST API
