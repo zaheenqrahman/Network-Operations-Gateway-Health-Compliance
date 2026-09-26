@@ -2,7 +2,7 @@
 
 ## Reference values
 
-- Live app URL: `https://netopsgateway-g3gre6a2anaphpdk.westus3-01.azurewebsites.net`
+- Live app URL: `https://<app-hostname>.azurewebsites.net` (hostname redacted)
 - Resource group: `netopsgatewaycomphealth-rg`, App Service name: `netopsgateway`
 - Working `ORG_ID`: `1795064` (Meraki org name: `Student`)
 - Broken `ORG_ID` (do not use): `669910444571370036` (`DevNet-Jg8aSYcjHWSU` — 404s on every network/device call, likely an inaccessible placeholder org)
