@@ -1,8 +1,23 @@
+import hmac
 import os
-from flask import Flask
+from flask import Flask, request, jsonify
 import meraki
 
 app = Flask(__name__)
+
+
+@app.before_request
+def require_token():
+    if request.path == "/":
+        return None
+    expected = os.environ.get("GATEWAY_TOKEN", "")
+    supplied = request.headers.get("X-API-Token", "")
+    if not expected:
+        return jsonify(error="server auth not configured"), 503
+    if not hmac.compare_digest(supplied, expected):
+        return jsonify(error="unauthorized"), 401
+    return None
+
 
 API_KEY = os.environ.get("MERAKI_API_KEY", "")
 ORG_ID = os.environ.get("ORG_ID", "")

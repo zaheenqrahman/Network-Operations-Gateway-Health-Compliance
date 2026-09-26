@@ -4,9 +4,11 @@ from application import app, check_device_compliance, check_network_health
 
 
 @pytest.fixture
-def client():
+def client(monkeypatch):
+    monkeypatch.setenv("GATEWAY_TOKEN", "test-token")
     app.config["TESTING"] = True
     with app.test_client() as client:
+        client.environ_base["HTTP_X_API_TOKEN"] = "test-token"
         yield client
 
 
@@ -131,3 +133,16 @@ def test_alerts_scan(client):
     assert "alerts_found" in data
     assert data["alerts_found"] == len(data["alerts"])
     assert data["source"] in ("live", "mock")
+
+
+def test_requires_token_missing(monkeypatch):
+    monkeypatch.setenv("GATEWAY_TOKEN", "test-token")
+    with app.test_client() as c:
+        assert c.get("/networks").status_code == 401
+
+
+def test_requires_token_wrong(monkeypatch):
+    monkeypatch.setenv("GATEWAY_TOKEN", "test-token")
+    with app.test_client() as c:
+        r = c.get("/networks", headers={"X-API-Token": "wrong"})
+        assert r.status_code == 401
