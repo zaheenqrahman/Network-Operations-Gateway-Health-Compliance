@@ -14,7 +14,7 @@ NetOps Gateway is a REST API that pulls live network and device data from the Ci
   <img src="docs/architecture.svg" alt="NetOps Gateway architecture overview showing Meraki Cloud feeding the Flask API gateway, which is queried by an operations console or client" width="980">
 </p>
 
-<p align="center"><em>Meraki Cloud telemetry flows into NetOps Gateway, which evaluates health/compliance and serves the results over REST.</em></p>
+<p align="center"><em>Meraki Cloud telemetry flows into NetOps Gateway, which evaluates health/compliance and serves the results over REST with Flask.</em></p>
 
 ## What It Does
 
@@ -22,7 +22,7 @@ NetOps Gateway is a REST API that pulls live network and device data from the Ci
 - Evaluates network health based on live device status (online/offline/alerting)
 - Checks individual devices against a compliance rule set (status + approved model list)
 - Scans all networks for active alerts in one call
-- Falls back to mock data automatically if the Meraki API is unreachable, so the API stays usable in demos/dev without live credentials — every response includes a `"source": "live" | "mock"` field so it's never ambiguous which one you're looking at
+- Falls back to the mock data automatically if the Meraki API is not there, so the API stays usable in demos/dev without live credentials — every response includes a `"source": "live" | "mock"` field 
 
 ## API Endpoints
 
@@ -39,8 +39,8 @@ All endpoints except `/` require an `X-API-Token` header matching the `GATEWAY_T
 ## Technology Stack
 
 - **Python / Flask** — REST API
-- **Cisco Meraki Dashboard API** — live network/device telemetry
-- **Azure App Service** — hosting, deployed via GitHub Actions CI/CD
+- **Cisco Meraki Dashboard API with Cisco Devnet Sandbox** — live network/device telemetry
+- **Azure App Service** — hosting, deployed via GitHub Actions CI/CD that is automated
 - **pytest** — test suite for compliance and health logic
 
 ## Getting Started
@@ -65,6 +65,4 @@ All endpoints except `/` require an `X-API-Token` header matching the `GATEWAY_T
 
 This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
 
-## Security
 
-Please review [SECURITY.md](SECURITY.md) for supported versions and reporting procedures for vulnerabilities.
