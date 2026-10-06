@@ -6,7 +6,7 @@
 [![Flask](https://img.shields.io/badge/Flask-3.0%2B-000000?logo=flask&logoColor=white)](https://flask.palletsprojects.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-NetOps Gateway is a REST API that pulls live network and device data from the Cisco Meraki cloud, evaluates health and compliance against a simple rule set, and exposes the results as JSON. It's built to help a network operations team see device status, compliance gaps, and active alerts across an organization without digging through the Meraki dashboard by hand requiring somebody 24/7.
+NetOps Gateway is a REST API that pulls live network and device data from the Cisco Meraki cloud, evaluates health and compliance against a designated rule set, and exposes the results as JSON. It's built to help a network operations team see device status, compliance gaps, and active alerts across an organization without digging through the Meraki dashboard by hand requiring somebody 24/7.
 
 ## Architecture Overview
 
