@@ -6,7 +6,7 @@
 [![Flask](https://img.shields.io/badge/Flask-3.0%2B-000000?logo=flask&logoColor=white)](https://flask.palletsprojects.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-NetOps Gateway is a REST API that pulls live network and device data from the Cisco Meraki cloud, evaluates health and compliance against a simple rule set, and exposes the results as JSON. It's built to help a network operations team see device status, compliance gaps, and active alerts across an organization without digging through the Meraki dashboard by hand.
+NetOps Gateway is a REST API that pulls live network and device data from the Cisco Meraki cloud, evaluates health and compliance against a designated rule set, and exposes the results as JSON. It's built to help a network operations team see device status, compliance gaps, and active alerts across an organization without digging through the Meraki dashboard by hand requiring somebody 24/7.
 
 ## Architecture Overview
 
@@ -14,7 +14,7 @@ NetOps Gateway is a REST API that pulls live network and device data from the Ci
   <img src="docs/architecture.svg" alt="NetOps Gateway architecture overview showing Meraki Cloud feeding the Flask API gateway, which is queried by an operations console or client" width="980">
 </p>
 
-<p align="center"><em>Meraki Cloud telemetry flows into NetOps Gateway, which evaluates health/compliance and serves the results over REST.</em></p>
+<p align="center"><em>Meraki Cloud telemetry flows into NetOps Gateway, which evaluates health/compliance and serves the results over REST with Flask.</em></p>
 
 ## What It Does
 
@@ -22,7 +22,7 @@ NetOps Gateway is a REST API that pulls live network and device data from the Ci
 - Evaluates network health based on live device status (online/offline/alerting)
 - Checks individual devices against a compliance rule set (status + approved model list)
 - Scans all networks for active alerts in one call
-- Falls back to mock data automatically if the Meraki API is unreachable, so the API stays usable in demos/dev without live credentials — every response includes a `"source": "live" | "mock"` field so it's never ambiguous which one you're looking at
+- Falls back to the mock data automatically if the Meraki API is not there, so the API stays usable in demos/dev without live credentials — every response includes a `"source": "live" | "mock"` field 
 
 ## API Endpoints
 
@@ -36,11 +36,11 @@ NetOps Gateway is a REST API that pulls live network and device data from the Ci
 
 All endpoints except `/` require an `X-API-Token` header matching the `GATEWAY_TOKEN` app setting. Requests without it get `401`; if `GATEWAY_TOKEN` is not configured the server returns `503` rather than serving unauthenticated.
 
-## Technology Stack
+## Technology Stack/SDK
 
 - **Python / Flask** — REST API
-- **Cisco Meraki Dashboard API** — live network/device telemetry
-- **Azure App Service** — hosting, deployed via GitHub Actions CI/CD
+- **Cisco Meraki Dashboard API with Cisco Devnet Sandbox** — live network/device telemetry
+- **Azure App Service** — hosting, deployed via GitHub Actions CI/CD that is automated
 - **pytest** — test suite for compliance and health logic
 
 ## Getting Started
@@ -57,14 +57,8 @@ All endpoints except `/` require an `X-API-Token` header matching the `GATEWAY_T
 - `docs/architecture.svg` — architecture diagram
 - `.github/workflows/` — CI/CD pipeline (Azure deploy)
 
-## Roadmap
-
-- Real device compliance data — currently proven against a Cisco DevNet Meraki sandbox (populated with real devices); the production org has networks but no owned/claimed hardware yet, so `/devices` returns mock data there until a real or Systems-Manager-enrolled device is added
-
 ## License
 
 This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
 
-## Security
 
-Please review [SECURITY.md](SECURITY.md) for supported versions and reporting procedures for vulnerabilities.
