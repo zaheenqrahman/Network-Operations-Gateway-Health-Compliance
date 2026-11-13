@@ -1,9 +1,40 @@
 import hmac
 import os
+from datetime import datetime, timezone
+
 from flask import Flask, request, jsonify
+from flask_sqlalchemy import SQLAlchemy
 import meraki
 
 app = Flask(__name__)
+app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL", "sqlite:///netops.db")
+db = SQLAlchemy(app)
+
+
+class HealthCheck(db.Model):
+    """One row per network per /alerts/scan run, so health can be reviewed over time."""
+    id = db.Column(db.Integer, primary_key=True)
+    checked_at = db.Column(db.DateTime, nullable=False, default=lambda: datetime.now(timezone.utc))
+    network_id = db.Column(db.String(64), nullable=False, index=True)
+    network_name = db.Column(db.String(128), nullable=False)
+    healthy = db.Column(db.Boolean, nullable=False)
+    issue = db.Column(db.Text, nullable=True)
+    source = db.Column(db.String(8), nullable=False)  # "live" or "mock"
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "checked_at": self.checked_at.isoformat(),
+            "network_id": self.network_id,
+            "network_name": self.network_name,
+            "healthy": self.healthy,
+            "issue": self.issue,
+            "source": self.source,
+        }
+
+
+with app.app_context():
+    db.create_all()
 
 
 @app.before_request
@@ -172,14 +203,34 @@ def scan_alerts():
     networks, networks_source = fetch_networks()
     device_statuses, statuses_source = fetch_device_statuses()
     alerts = []
+    source = combined_source(networks_source, statuses_source)
 
     for network in networks:
         result = check_network_health(network, device_statuses)
         if result["healthy"] == False:
             alerts.append(result["issue"])
+        db.session.add(HealthCheck(
+            network_id=network["id"],
+            network_name=network["name"],
+            healthy=result["healthy"],
+            issue=result["issue"],
+            source=source,
+        ))
+    db.session.commit()
 
-    source = combined_source(networks_source, statuses_source)
     return{"alerts_found": len(alerts), "alerts": alerts, "source": source}
+
+
+@app.route('/alerts/history')
+def alert_history():
+    """Most recent stored health checks, newest first. Optional ?network_id= and ?limit= (max 200)."""
+    limit = min(request.args.get("limit", default=50, type=int), 200)
+    query = HealthCheck.query.order_by(HealthCheck.checked_at.desc(), HealthCheck.id.desc())
+    network_id = request.args.get("network_id")
+    if network_id:
+        query = query.filter_by(network_id=network_id)
+    return {"history": [row.to_dict() for row in query.limit(limit).all()]}
+
 
 if __name__ == '__main__':
     app.run(debug=True)
