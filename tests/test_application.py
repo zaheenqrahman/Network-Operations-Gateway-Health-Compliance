@@ -146,3 +146,34 @@ def test_requires_token_wrong(monkeypatch):
     with app.test_client() as c:
         r = c.get("/networks", headers={"X-API-Token": "wrong"})
         assert r.status_code == 401
+
+
+# --- health check history (SQLAlchemy) ---
+
+def test_scan_saves_history(client):
+    from application import HealthCheck, db
+
+    with app.app_context():
+        HealthCheck.query.delete()
+        db.session.commit()
+
+    scan = client.post("/alerts/scan").get_json()
+    history = client.get("/alerts/history").get_json()["history"]
+
+    assert len(history) == 3  # one row per mock network
+    unhealthy = [row for row in history if not row["healthy"]]
+    assert len(unhealthy) == scan["alerts_found"]
+    assert all(row["source"] in ("live", "mock") for row in history)
+
+
+def test_history_filter_by_network(client):
+    client.post("/alerts/scan")
+    history = client.get("/alerts/history?network_id=N_1002").get_json()["history"]
+    assert len(history) >= 1
+    assert all(row["network_id"] == "N_1002" for row in history)
+
+
+def test_history_requires_token(monkeypatch):
+    monkeypatch.setenv("GATEWAY_TOKEN", "test-token")
+    with app.test_client() as c:
+        assert c.get("/alerts/history").status_code == 401
