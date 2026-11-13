@@ -39,3 +39,7 @@ site/
 secrets/
 config/local*.json
 config/*.local
+
+# Local SQLite database
+*.db
+instance/
